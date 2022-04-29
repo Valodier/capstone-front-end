@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import RoomsIndex from "../views/RoomsIndex.vue";
 import RoomsCreate from "../views/RoomsCreate.vue";
-import TasksIndex from "../views/TasksIndex.vue";
+import TasksHome from "../views/TasksHome.vue";
 
 const routes = [
   {
@@ -23,7 +23,7 @@ const routes = [
   {
     path: "/tasks",
     name: "tasks",
-    component: TasksIndex,
+    component: TasksHome,
   },
   {
     path: "/about",
