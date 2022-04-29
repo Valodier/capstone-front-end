@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div>
+      <h1>Addition</h1>
+      Name:
+      <input type="text" v-model="newRoomParams.name" />
+      Room Image:
+      <input type="text" v-model="newRoomParams.bgimage" />
+      <br /><button v-on:click="roomsCreate">Add Room</button>
+    </div>
     <div v-for="room in rooms" :key="room.id">
       <h1>{{ room.name }}</h1>
     </div>
@@ -14,6 +22,8 @@ export default {
     return {
       message: "Rooms!",
       rooms: [],
+      newRoomParams: {},
+      newTaskParams: {},
     };
   },
   created: function () {
@@ -28,7 +38,7 @@ export default {
     },
     roomsCreate() {
       axios
-        .post("/rooms", this.newRoomsParams)
+        .post("/rooms.json", this.newRoomParams)
         .then((response) => {
           console.log("Room creation successful", response.data);
           this.$router.push("/rooms");
