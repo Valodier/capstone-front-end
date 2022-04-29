@@ -2,6 +2,7 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/rooms">Rooms</router-link> |
+    <router-link to="/rooms/new">Add (dropdown) Room</router-link> |
     <router-link to="/tasks">Tasks</router-link> |
     <router-link to="/about">About</router-link>
   </nav>

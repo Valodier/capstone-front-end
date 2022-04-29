@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import RoomsIndex from "../views/RoomsIndex.vue";
+import RoomsCreate from "../views/RoomsCreate.vue";
 import TasksIndex from "../views/TasksIndex.vue";
 
 const routes = [
@@ -13,6 +14,11 @@ const routes = [
     path: "/rooms",
     name: "rooms",
     component: RoomsIndex,
+  },
+  {
+    path: "/rooms/new",
+    name: "rooms-new",
+    component: RoomsCreate,
   },
   {
     path: "/tasks",
