@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ message }}</h1>
+    <h1>{{}}</h1>
   </div>
 </template>
 
@@ -23,6 +23,28 @@ export default {
         this.rooms = response.data;
         console.log("Rooms Index Retrieves", response.data);
       });
+    },
+    roomsCreate() {
+      axios
+        .post("/rooms", this.newRoomsParams)
+        .then((response) => {
+          console.log("Room creation successful", response.data);
+          this.$router.push("/rooms");
+        })
+        .catch((error) => {
+          console.log("Error creating room", error.response.data.errors);
+        });
+    },
+    tasksCreate() {
+      axios
+        .post("/tasks.json", this.newTaskParams)
+        .then((response) => {
+          console.log("Task created successfully", response.data);
+          this.$router.push("/tasks");
+        })
+        .catch((error) => {
+          console.log("Error creating room", error.response.data.error);
+        });
     },
   },
 };

@@ -21,17 +21,6 @@ export default {
           console.log("Tasks Index Retrieved", response.data);
       });
     },
-    tasksCreate() {
-      axios
-        .post("/tasks.json", this.newTaskParams)
-        .then((response) => {
-          console.log("Task created successfully", response.data);
-          this.$router.push("/tasks");
-        })
-        .catch((error) => {
-          console.log("Error creating room", error.response.data.error);
-        });
-    },
   },
 };
 </script>
