@@ -15,7 +15,10 @@
     </div>
     <dialog id="room-details">
       <form v-for="task in tasks" :key="task.id" method="dialog">
-        <h1 v-if="task.room_id === currentRoom.id">{{ task.title }}</h1>
+        <div v-if="task.room_id === currentRoom.id">
+          <h1>{{ task.title }}</h1>
+          <p>{{ task.description }}</p>
+        </div>
       </form>
     </dialog>
   </div>
