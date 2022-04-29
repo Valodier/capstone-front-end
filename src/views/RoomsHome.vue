@@ -11,6 +11,9 @@
     <div v-for="room in rooms" :key="room.id">
       <h1>{{ room.name }}</h1>
     </div>
+    <dialog id="room-details">
+      <form></form>
+    </dialog>
   </div>
 </template>
 
@@ -22,12 +25,16 @@ export default {
     return {
       message: "Rooms!",
       rooms: [],
+      tasks: [],
       newRoomParams: {},
       newTaskParams: {},
+      currentRoom: {},
+      currentRoomTasks: {},
     };
   },
   created: function () {
     this.roomsIndex();
+    this.tasksIndex();
   },
   methods: {
     roomsIndex: function () {
@@ -47,6 +54,17 @@ export default {
           console.log("Error creating room", error.response.data.errors);
         });
     },
+    // roomsShow(room) {
+    //   console.log(room);
+    //   this.currentRoom = room;
+    //   document.querySelector("#room-details").showModal();
+    // },
+    tasksIndex: function () {
+      axios.get("/tasks.json").then((response) => {
+        (this.tasks = response.data),
+          console.log("Tasks Index Retrieved", response.data);
+      });
+    },
     tasksCreate() {
       axios
         .post("/tasks.json", this.newTaskParams)
@@ -57,6 +75,11 @@ export default {
         .catch((error) => {
           console.log("Error creating room", error.response.data.error);
         });
+    },
+    tasksShow(room) {
+      console.log(room);
+      this.currentRoomTasks = room.task;
+      document.querySelector("#room-details").showModal();
     },
   },
 };
