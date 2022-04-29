@@ -10,9 +10,13 @@
     </div>
     <div v-for="room in rooms" :key="room.id">
       <h1>{{ room.name }}</h1>
+      <p>Room Names?</p>
+      <button v-on:click="tasksShow(task, room)">Tasks</button>
     </div>
     <dialog id="room-details">
-      <form></form>
+      <form v-for="task in tasks" :key="task.id" method="dialog">
+        <h1 v-if="task.room_id === currentRoom.id">{{ task.title }}</h1>
+      </form>
     </dialog>
   </div>
 </template>
@@ -54,15 +58,10 @@ export default {
           console.log("Error creating room", error.response.data.errors);
         });
     },
-    // roomsShow(room) {
-    //   console.log(room);
-    //   this.currentRoom = room;
-    //   document.querySelector("#room-details").showModal();
-    // },
     tasksIndex: function () {
       axios.get("/tasks.json").then((response) => {
-        (this.tasks = response.data),
-          console.log("Tasks Index Retrieved", response.data);
+        this.tasks = response.data;
+        console.log("Tasks Index Retrieved", response.data);
       });
     },
     tasksCreate() {
@@ -76,9 +75,12 @@ export default {
           console.log("Error creating room", error.response.data.error);
         });
     },
-    tasksShow(room) {
+    tasksShow(task, room) {
+      task = this.tasks;
+      this.currentRoom = room;
+      console.log(task);
       console.log(room);
-      this.currentRoomTasks = room.task;
+      // this.currentRoomTasks = task(this.task.room_id === this.currentRoom.id);
       document.querySelector("#room-details").showModal();
     },
   },
