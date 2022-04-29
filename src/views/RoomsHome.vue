@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>{{}}</h1>
+    <div v-for="room in rooms" :key="room.id">
+      <h1>{{ room.name }}</h1>
+    </div>
   </div>
 </template>
 
