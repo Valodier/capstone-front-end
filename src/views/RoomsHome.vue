@@ -20,14 +20,9 @@
     <dialog id="room-details">
       <form method="dialog">
         <div v-for="task in tasks" :key="task.id">
-          <div
-            v-if="
-              task.room_id === currentRoom.id && task.user_id == userID
-              // uses local storage to verify user Id against current task user ID
-              // this is stored off the login post action
-              // rather than making a user route for the user_id
-            "
-          >
+          <div v-if="task.room_id === currentRoom.id && task.user_id == userID">
+            <!-- stores user_ID during login POST and stores it for use here -->
+            <!-- to limit returned tasks to those that match the current userID and roomID -->
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
             <div>
