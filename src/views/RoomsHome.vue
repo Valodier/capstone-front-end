@@ -20,7 +20,14 @@
     <dialog id="room-details">
       <form method="dialog">
         <div v-for="task in tasks" :key="task.id">
-          <div v-if="task.room_id === currentRoom.id">
+          <div
+            v-if="
+              task.room_id === currentRoom.id && task.user_id == userID
+              // uses local storage to verify user Id against current task user ID
+              // this is stored off the login post action
+              // rather than making a user route for the user_id
+            "
+          >
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
             <div>
@@ -54,6 +61,7 @@ export default {
   data: function () {
     return {
       message: "Rooms!",
+      userID: "",
       rooms: [],
       tasks: [],
       currentRoom: {},
@@ -72,7 +80,12 @@ export default {
     roomsIndex: function () {
       axios.get("/rooms.json").then((response) => {
         this.rooms = response.data;
-        console.log("Rooms Index Retrieves", response.data);
+        console.log(
+          "Rooms Index Retrieved",
+          localStorage.user_id,
+          response.data
+        );
+        this.userID = localStorage.user_id;
         // Returns sorted array by ID, meaning the most recently created room is at the bottom
         return this.rooms.sort((a, b) => a.id - b.id);
       });
@@ -108,7 +121,7 @@ export default {
     createTaskForCurrentRoom() {
       this.newTaskParams = {
         room_id: this.currentRoom,
-        user_id: this.currentUser,
+        user_id: this.user_id,
       };
       axios
         .post("/tasks.json", this.newTaskParams)
@@ -121,11 +134,13 @@ export default {
         });
     },
 
-    tasksShow(task, room) {
+    tasksShow(task, room, userID) {
       task = this.tasks;
+      userID = this.userID;
       this.currentRoom = room;
       console.log(task);
       console.log(room);
+      console.log(userID);
       document.querySelector("#room-details").showModal();
     },
     tasksStatusToFalse(task) {
