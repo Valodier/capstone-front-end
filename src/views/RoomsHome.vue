@@ -23,6 +23,11 @@
           <div v-if="task.room_id === currentRoom.id">
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
+            <div>
+              <button @click="roomsStatusToFalse(currentRoom)">
+                Task Completed!
+              </button>
+            </div>
           </div>
         </div>
         <form>
@@ -31,6 +36,7 @@
           <input type="text" v-model="newTaskParams.title" />
           Description:
           <input type="text" v-model="newTaskParams.description" />
+          <button @click="createTaskForCurrentRoom()"></button>
         </form>
         <div>
           <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
@@ -54,6 +60,7 @@ export default {
       newRoomParams: {},
       editRoomParams: {},
       newTaskParams: {},
+      editTaskParams: {},
       currentRoomTasks: {},
     };
   },
@@ -98,7 +105,11 @@ export default {
       });
     },
 
-    tasksCreate() {
+    createTaskForCurrentRoom() {
+      this.newTaskParams = {
+        room_id: this.currentRoom,
+        user_id: this.currentUser,
+      };
       axios
         .post("/tasks.json", this.newTaskParams)
         .then((response) => {
@@ -116,6 +127,14 @@ export default {
       console.log(task);
       console.log(room);
       document.querySelector("#room-details").showModal();
+    },
+    tasksStatusToFalse(task) {
+      this.editTaskParams.status = "false";
+      axios
+        .patch("/tasks/" + task.id + ".json", this.editTaskParams)
+        .then((response) => console.log("Update!", response.data));
+      this.editRoomParams.status = "";
+      this.$router.push("/rooms");
     },
   },
 };

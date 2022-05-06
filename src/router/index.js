@@ -4,6 +4,7 @@ import RoomsHome from "../views/RoomsHome.vue";
 import TasksHome from "../views/TasksHome.vue";
 import SignUp from "../views/SignUp.vue";
 import LogIn from "../views/LogIn.vue";
+import LogOut from "../views/LogOut.vue";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/login",
     name: "log-in",
     component: LogIn,
+  },
+  {
+    path: "/logout",
+    name: "log-out",
+    component: LogOut,
   },
   {
     path: "/about",
