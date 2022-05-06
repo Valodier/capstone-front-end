@@ -9,16 +9,33 @@
       <br /><button v-on:click="roomsCreate">Add Room</button>
     </div>
     <div v-for="room in rooms" :key="room.id">
-      <h1>{{ room.name }}</h1>
-      <p>Room Names?</p>
-      <button v-on:click="tasksShow(task, room)">Tasks</button>
+      <div v-if="room.status === true">
+        <h1>
+          {{ room.name }}
+        </h1>
+        <img :src="room.image" />
+        <button v-on:click="tasksShow(task, room)">Tasks</button>
+      </div>
     </div>
     <dialog id="room-details">
-      <form v-for="task in tasks" :key="task.id" method="dialog">
-        <div v-if="task.room_id === currentRoom.id">
-          <h1>{{ task.title }}</h1>
-          <p>{{ task.description }}</p>
+      <form method="dialog">
+        <div v-for="task in tasks" :key="task.id">
+          <div v-if="task.room_id === currentRoom.id">
+            <h1>{{ task.title }}</h1>
+            <p>{{ task.description }}</p>
+          </div>
         </div>
+        <form>
+          <h3>Add Task To Current Room</h3>
+          Task:
+          <input type="text" v-model="newTaskParams.title" />
+          Description:
+          <input type="text" v-model="newTaskParams.description" />
+        </form>
+        <div>
+          <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
+        </div>
+        <button>Close</button>
       </form>
     </dialog>
   </div>
@@ -33,9 +50,10 @@ export default {
       message: "Rooms!",
       rooms: [],
       tasks: [],
-      newRoomParams: {},
-      newTaskParams: {},
       currentRoom: {},
+      newRoomParams: {},
+      editRoomParams: {},
+      newTaskParams: {},
       currentRoomTasks: {},
     };
   },
@@ -48,8 +66,11 @@ export default {
       axios.get("/rooms.json").then((response) => {
         this.rooms = response.data;
         console.log("Rooms Index Retrieves", response.data);
+        // Returns sorted array by ID, meaning the most recently created room is at the bottom
+        return this.rooms.sort((a, b) => a.id - b.id);
       });
     },
+
     roomsCreate() {
       axios
         .post("/rooms.json", this.newRoomParams)
@@ -61,12 +82,22 @@ export default {
           console.log("Error creating room", error.response.data.errors);
         });
     },
+
+    roomsStatusToFalse(room) {
+      this.editRoomParams.status = "false";
+      axios
+        .patch("/rooms/" + room.id + ".json", this.editRoomParams)
+        .then((response) => console.log("Update!", response.data));
+      this.editRoomParams.status = "";
+      this.$router.push("/rooms");
+    },
     tasksIndex: function () {
       axios.get("/tasks.json").then((response) => {
         this.tasks = response.data;
         console.log("Tasks Index Retrieved", response.data);
       });
     },
+
     tasksCreate() {
       axios
         .post("/tasks.json", this.newTaskParams)
@@ -78,12 +109,12 @@ export default {
           console.log("Error creating room", error.response.data.error);
         });
     },
+
     tasksShow(task, room) {
       task = this.tasks;
       this.currentRoom = room;
       console.log(task);
       console.log(room);
-      // this.currentRoomTasks = task(this.task.room_id === this.currentRoom.id);
       document.querySelector("#room-details").showModal();
     },
   },
