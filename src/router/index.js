@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import RoomsHome from "../views/RoomsHome.vue";
 import TasksHome from "../views/TasksHome.vue";
+import SignUp from "../views/SignUp.vue";
+import LogIn from "../views/LogIn.vue";
 
 const routes = [
   {
@@ -18,6 +20,16 @@ const routes = [
     path: "/tasks",
     name: "tasks",
     component: TasksHome,
+  },
+  {
+    path: "/signup",
+    name: "sign-up",
+    component: SignUp,
+  },
+  {
+    path: "/login",
+    name: "log-in",
+    component: LogIn,
   },
   {
     path: "/about",
