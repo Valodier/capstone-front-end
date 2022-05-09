@@ -12,10 +12,6 @@
       <div v-if="room.status === true">
         <h1>
           {{ room.name }}
-
-          <!-- Test -->
-          {{ userID }}
-          <!-- Test -->
         </h1>
         <img :src="room.image" />
         <button v-on:click="tasksShow(task, room)">Tasks</button>
@@ -35,12 +31,6 @@
             <!-- to limit returned tasks to those that match the current userID and roomID -->
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
-
-            <!-- Tests -->
-            <p>{{ task.id }}</p>
-            <p>{{ task.status }}</p>
-            <!-- Tests -->
-
             <div>
               <button @click="tasksStatusToFalse(task)">Task Completed!</button>
             </div>
