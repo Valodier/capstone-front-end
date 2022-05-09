@@ -20,15 +20,19 @@
     <dialog id="room-details">
       <form method="dialog">
         <div v-for="task in tasks" :key="task.id">
-          <div v-if="task.room_id === currentRoom.id && task.user_id == userID">
+          <div
+            v-if="
+              task.room_id === currentRoom.id &&
+              task.user_id == this.userID &&
+              task.status === true
+            "
+          >
             <!-- stores user_ID during login POST and stores it for use here -->
             <!-- to limit returned tasks to those that match the current userID and roomID -->
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
             <div>
-              <button @click="roomsStatusToFalse(currentRoom)">
-                Task Completed!
-              </button>
+              <button @click="tasksStatusToFalse(task)">Task Completed!</button>
             </div>
           </div>
         </div>
@@ -114,10 +118,9 @@ export default {
     },
 
     createTaskForCurrentRoom() {
-      this.newTaskParams = {
-        room_id: this.currentRoom,
-        user_id: this.user_id,
-      };
+      this.newTaskParams.room_id = this.currentRoom.id;
+      this.newTaskParams.user_id = this.userID;
+
       axios
         .post("/tasks.json", this.newTaskParams)
         .then((response) => {
@@ -143,7 +146,7 @@ export default {
       axios
         .patch("/tasks/" + task.id + ".json", this.editTaskParams)
         .then((response) => console.log("Update!", response.data));
-      this.editRoomParams.status = "";
+      this.editTaskParams.status = "";
       this.$router.push("/rooms");
     },
   },
