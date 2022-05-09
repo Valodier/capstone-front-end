@@ -25,7 +25,6 @@ export default {
   data: function () {
     return {
       newSessionParams: {},
-      userID: {},
       errors: [],
     };
   },
@@ -34,10 +33,11 @@ export default {
       axios
         .post("/sessions", this.newSessionParams)
         .then((response) => {
-          this.userID = response.data.user_id;
+          response.data.user_id;
           axios.defaults.headers.common["Authorization"] =
             "Bearer " + response.data.jwt;
           localStorage.setItem("jwt", response.data.jwt);
+          localStorage.setItem("user_id", response.data.user_id);
           this.$router.push("/rooms");
         })
         .catch((error) => {

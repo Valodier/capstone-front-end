@@ -12,6 +12,10 @@
       <div v-if="room.status === true">
         <h1>
           {{ room.name }}
+
+          <!-- Test -->
+          {{ userID }}
+          <!-- Test -->
         </h1>
         <img :src="room.image" />
         <button v-on:click="tasksShow(task, room)">Tasks</button>
@@ -31,6 +35,12 @@
             <!-- to limit returned tasks to those that match the current userID and roomID -->
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
+
+            <!-- Tests -->
+            <p>{{ task.id }}</p>
+            <p>{{ task.status }}</p>
+            <!-- Tests -->
+
             <div>
               <button @click="tasksStatusToFalse(task)">Task Completed!</button>
             </div>
@@ -110,6 +120,7 @@ export default {
       this.editRoomParams.status = "";
       this.$router.push("/rooms");
     },
+
     tasksIndex: function () {
       axios.get("/tasks.json").then((response) => {
         this.tasks = response.data;
@@ -136,13 +147,18 @@ export default {
       task = this.tasks;
       userID = this.userID;
       this.currentRoom = room;
+
+      // Tests
       console.log(task);
       console.log(room);
       console.log(userID);
+      // Tests
       document.querySelector("#room-details").showModal();
     },
+
     tasksStatusToFalse(task) {
       this.editTaskParams.status = "false";
+      console.log("Task id:", task.id);
       axios
         .patch("/tasks/" + task.id + ".json", this.editTaskParams)
         .then((response) => console.log("Update!", response.data));
