@@ -1,9 +1,20 @@
 <template>
-  <div v-for="task in tasks" :key="task.id">
-    <h1>{{ task.title }}</h1>
-    <button @click="tasksShow(task, room)">Add task to Room</button>
+  <div>
+    <div v-for="task in tasks" :key="task.id">
+      <h1>{{ task.title }}</h1>
+      <button @click="tasksShow(task, room)">Add task to Room</button>
+    </div>
+
     <dialog id="add-task-to-room">
-      <form method="dialog"></form>
+      <form method="dialog">
+        <div v-for="room in rooms" :key="room.id">
+          <input type="checkbox" @click="addTaskToRoom()" v-model="room.id" />{{
+            room.name
+          }}
+
+          <!-- Attempting to make it so clicking this checkbox references the room name next to it to add the current task to that room -->
+        </div>
+      </form>
     </dialog>
   </div>
 </template>
@@ -54,6 +65,11 @@ export default {
       // Tests
 
       document.querySelector("#add-task-to-room").showModal();
+    },
+
+    addTaskToRoom(room) {
+      // room.id = this.currentRoom;
+      console.log(room);
     },
   },
 };
