@@ -52,7 +52,9 @@
           <input type="text" v-model="newTaskParams.title" />
           Description:
           <input type="text" v-model="newTaskParams.description" />
-          <button @click="createTaskForCurrentRoom()"></button>
+          <button @click="createTaskForCurrentRoom(currentRoom)">
+            Add Task
+          </button>
         </form>
         <div>
           <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
