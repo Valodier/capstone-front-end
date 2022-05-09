@@ -8,6 +8,7 @@
       <input type="text" v-model="newRoomParams.bgimage" />
       <br /><button v-on:click="roomsCreate">Add Room</button>
     </div>
+
     <div v-for="room in rooms" :key="room.id">
       <div v-if="room.status === true">
         <h1>
@@ -17,6 +18,7 @@
         <button v-on:click="tasksShow(task, room)">Tasks</button>
       </div>
     </div>
+
     <dialog id="room-details">
       <form method="dialog">
         <div v-for="task in tasks" :key="task.id">
@@ -36,6 +38,7 @@
             </div>
           </div>
         </div>
+
         <form>
           <h3>Add Task To Current Room</h3>
           Task:
@@ -46,6 +49,7 @@
             Add Task
           </button>
         </form>
+
         <div>
           <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
         </div>
