@@ -5,15 +5,15 @@
       <button @click="tasksShow(task, room)">Add task to Room</button>
     </div>
 
-    <dialog id="add-task-to-room">
+    <dialog id="add-task-to-rooms">
       <form method="dialog">
         <div v-for="room in rooms" :key="room.id">
-          <input type="checkbox" @click="addTaskToRoom()" v-model="room.id" />{{
-            room.name
-          }}
+          <input type="checkbox" :value="room.id" v-model="axiosRequests" />
+          {{ room.name }}
 
           <!-- Attempting to make it so clicking this checkbox references the room name next to it to add the current task to that room -->
         </div>
+        <button @click="addTaskToSelectedRooms()">Add task to Rooms</button>
       </form>
     </dialog>
   </div>
@@ -27,6 +27,9 @@ export default {
     return {
       tasks: [],
       rooms: [],
+      currentRoom: {},
+      editRoomParams: {},
+      axiosRequests: [],
     };
   },
   created() {
@@ -64,12 +67,28 @@ export default {
       console.log(room);
       // Tests
 
-      document.querySelector("#add-task-to-room").showModal();
+      document.querySelector("#add-task-to-rooms").showModal();
     },
 
-    addTaskToRoom(room) {
-      // room.id = this.currentRoom;
-      console.log(room);
+    createTaskForCurrentRoom() {
+      this.newTaskParams.room_id = this.currentRoom.id;
+      this.newTaskParams.user_id = this.userID;
+      this.newTaskParams.title = this.task.title;
+
+      axios
+        .post("/tasks.json", this.newTaskParams)
+        .then((response) => {
+          console.log("Task created successfully", response.data);
+          this.$router.push("/tasks");
+        })
+        .catch((error) => {
+          console.log("Error creating room", error.response.data.error);
+        });
+    },
+
+    addTaskToSelectedRooms() {
+      console.log("Selected rooms added", this.axiosRequests);
+      this.axiosRequests = [];
     },
   },
 };
