@@ -2,17 +2,18 @@
   <div>
     <div v-for="task in tasks" :key="task.id">
       <h1>{{ task.title }}</h1>
-      <button @click="tasksShow(task, room)">Add task to Room</button>
+      <button @click="tasksShow(task)">Add task to Room</button>
 
       <dialog id="add-task-to-rooms">
         <form method="dialog">
           <div v-for="room in rooms" :key="room.id">
             <input type="checkbox" :value="room.id" v-model="axiosRequests" />
             {{ room.name }}
-            {{ task.title }}
             <!-- Attempting to make it so clicking this checkbox references the room name next to it to add the current task to that room -->
           </div>
-          <button @click="addTaskToSelectedRooms()">Add task to Rooms</button>
+          <button @click="addTaskToSelectedRooms(task)">
+            Add task to Rooms
+          </button>
         </form>
       </dialog>
     </div>
@@ -27,8 +28,9 @@ export default {
     return {
       tasks: [],
       rooms: [],
+      userID: "",
       currentTask: {},
-      editRoomParams: {},
+      newTaskParams: {},
       axiosRequests: [],
     };
   },
@@ -58,19 +60,21 @@ export default {
       });
     },
 
-    tasksShow(task, room) {
+    tasksShow(task) {
       // Tests
       console.log(task);
-      console.log(room);
       // Tests
 
       document.querySelector("#add-task-to-rooms").showModal();
     },
 
-    createTaskForCurrentRoom() {
-      this.newTaskParams.room_id = this.currentRoom.id;
+    createTaskForCurrentRoom(i) {
+      console.log("Initiating Create task");
+      this.newTaskParams.room_id = i;
       this.newTaskParams.user_id = this.userID;
-      this.newTaskParams.title = this.task.title;
+      this.newTaskParams.title = this.currentTask.title;
+      this.newTaskParams.description = this.currentTask.description;
+      this.newTaskParams.status = this.currentTask.status;
 
       axios
         .post("/tasks.json", this.newTaskParams)
@@ -83,13 +87,15 @@ export default {
         });
     },
 
-    addTaskToSelectedRooms() {
+    addTaskToSelectedRooms(task) {
+      this.currentTask = task;
+      console.log("Current Task:", this.currentTask);
       this.axiosRequests.forEach((i) => {
-        console.log(i);
+        this.createTaskForCurrentRoom(i);
       });
       console.log("Selected rooms added", this.axiosRequests);
       this.axiosRequests = [];
-      console.log(this.axiosRequests);
+      console.log("Empty axiosRequests", this.axiosRequests);
     },
   },
 };
