@@ -1,4 +1,6 @@
-{
+{ "vueCompilerOptions": {
+  "experimentalShamefullySupportOptionsApi": false,
+},
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",

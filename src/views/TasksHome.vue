@@ -3,19 +3,19 @@
     <div v-for="task in tasks" :key="task.id">
       <h1>{{ task.title }}</h1>
       <button @click="tasksShow(task, room)">Add task to Room</button>
+
+      <dialog id="add-task-to-rooms">
+        <form method="dialog">
+          <div v-for="room in rooms" :key="room.id">
+            <input type="checkbox" :value="room.id" v-model="axiosRequests" />
+            {{ room.name }}
+            {{ task.title }}
+            <!-- Attempting to make it so clicking this checkbox references the room name next to it to add the current task to that room -->
+          </div>
+          <button @click="addTaskToSelectedRooms()">Add task to Rooms</button>
+        </form>
+      </dialog>
     </div>
-
-    <dialog id="add-task-to-rooms">
-      <form method="dialog">
-        <div v-for="room in rooms" :key="room.id">
-          <input type="checkbox" :value="room.id" v-model="axiosRequests" />
-          {{ room.name }}
-
-          <!-- Attempting to make it so clicking this checkbox references the room name next to it to add the current task to that room -->
-        </div>
-        <button @click="addTaskToSelectedRooms()">Add task to Rooms</button>
-      </form>
-    </dialog>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
     return {
       tasks: [],
       rooms: [],
-      currentRoom: {},
+      currentTask: {},
       editRoomParams: {},
       axiosRequests: [],
     };
@@ -59,9 +59,6 @@ export default {
     },
 
     tasksShow(task, room) {
-      task = this.tasks;
-      room = this.rooms;
-
       // Tests
       console.log(task);
       console.log(room);
@@ -87,8 +84,12 @@ export default {
     },
 
     addTaskToSelectedRooms() {
+      this.axiosRequests.forEach((i) => {
+        console.log(i);
+      });
       console.log("Selected rooms added", this.axiosRequests);
       this.axiosRequests = [];
+      console.log(this.axiosRequests);
     },
   },
 };

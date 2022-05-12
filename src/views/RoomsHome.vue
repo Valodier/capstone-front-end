@@ -15,7 +15,8 @@
           {{ room.name }}
         </h1>
         <img :src="room.image" />
-        <button v-on:click="tasksShow(task, room)">Tasks</button>
+        <button v-on:click="trueTasksShow(room)">Tasks</button> |
+        <button v-on:click="falseTasksShow(room)">Finished Tasks</button>
       </div>
     </div>
 
@@ -24,9 +25,9 @@
         <div v-for="task in tasks" :key="task.id">
           <div
             v-if="
-              task.room_id === currentRoom.id &&
+              task.room_id == currentRoom.id &&
               task.user_id == this.userID &&
-              task.status === true
+              task.status == true
             "
           >
             <!-- stores user_ID during login POST and stores it for use here -->
@@ -34,7 +35,7 @@
             <h1>{{ task.title }}</h1>
             <p>{{ task.description }}</p>
             <div>
-              <button @click="tasksStatusToFalse(task)">Task Completed!</button>
+              <button @click="tasksStatusChange(task)">Task Completed!</button>
             </div>
           </div>
         </div>
@@ -49,6 +50,33 @@
             Add Task
           </button>
         </form>
+
+        <div>
+          <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
+        </div>
+        <button>Close</button>
+      </form>
+    </dialog>
+
+    <dialog id="finished-tasks">
+      <form method="dialog">
+        <div v-for="task in tasks" :key="task.id">
+          <div
+            v-if="
+              task.room_id == currentRoom.id &&
+              task.user_id == this.userID &&
+              task.status == false
+            "
+          >
+            <!-- stores user_ID during login POST and stores it for use here -->
+            <!-- to limit returned tasks to those that match the current userID and roomID -->
+            <h1>{{ task.title }}</h1>
+            <p>{{ task.description }}</p>
+            <div>
+              <button @click="tasksStatusChange(task)">Re-add Task</button>
+            </div>
+          </div>
+        </div>
 
         <div>
           <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
@@ -139,25 +167,37 @@ export default {
         });
     },
 
-    tasksShow(task, room, userID) {
-      task = this.tasks;
-      userID = this.userID;
+    trueTasksShow(room) {
       this.currentRoom = room;
-
       // Tests
-      console.log(task);
       console.log(room);
-      console.log(userID);
       // Tests
       document.querySelector("#room-details").showModal();
     },
 
-    tasksStatusToFalse(task) {
-      this.editTaskParams.status = "false";
-      console.log("Task id:", task.id);
+    falseTasksShow(room) {
+      this.currentRoom = room;
+      // Tests
+      console.log(room);
+      // Tests
+      document.querySelector("#finished-tasks").showModal();
+    },
+
+    tasksStatusChange(task) {
+      console.log(task.status);
+      if (task.status == false) {
+        console.log("Changing Status to true");
+        this.editTaskParams.status = "true";
+        // makes it ?reactive? idk, updates the local tasks array so the page doesnt have to be refreshed to reflect change in list.
+        task.status = "true";
+      } else {
+        console.log("Changing Status to false");
+        this.editTaskParams.status = "false";
+        task.status = "false";
+      }
       axios
         .patch("/tasks/" + task.id + ".json", this.editTaskParams)
-        .then((response) => console.log("Update!", response.data));
+        .then((response) => console.log("Update!", response.data, task.status));
       this.editTaskParams.status = "";
       this.$router.push("/rooms");
     },
