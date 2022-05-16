@@ -77,10 +77,6 @@
             </div>
           </div>
         </div>
-
-        <div>
-          <button @click="roomsStatusToFalse(currentRoom)">Remove Room</button>
-        </div>
         <button>Close</button>
       </form>
     </dialog>

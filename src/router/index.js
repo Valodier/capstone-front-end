@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import RoomsHome from "../views/RoomsHome.vue";
+import UsersShow from "../views/UsersShow.vue";
 import TasksHome from "../views/TasksHome.vue";
 import SignUp from "../views/SignUp.vue";
 import LogIn from "../views/LogIn.vue";
@@ -11,6 +12,11 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/users/:id",
+    name: "users",
+    component: UsersShow,
   },
   {
     path: "/rooms",
