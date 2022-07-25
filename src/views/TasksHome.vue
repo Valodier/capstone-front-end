@@ -2,6 +2,7 @@
   <div>
     <div v-for="task in tasks" :key="task.id">
       <h1>{{ task.title }}</h1>
+      <p>{{ task.description }}</p>
       <button @click="tasksShow(task)">Add task to Room</button>
 
       <dialog id="add-task-to-rooms">
@@ -9,11 +10,20 @@
           <div v-for="room in rooms" :key="room.id">
             <input type="checkbox" :value="room.id" v-model="axiosRequests" />
             {{ room.name }}
-            <!-- Attempting to make it so clicking this checkbox references the room name next to it to add the current task to that room -->
           </div>
-          <button @click="addTaskToSelectedRooms(task)">
-            Add task to Rooms
-          </button>
+          <div>
+            <input v-model="userFilter" type="text" list="users-name" />
+
+            <datalist id="users-name">
+              <option v-for="user in groupID" :key="user.id">
+                {{ user.name }}
+              </option>
+            </datalist>
+          </div>
+
+          <button @click="addTaskToSelectedRooms(task)">Add task</button>
+
+          <button>Close</button>
         </form>
       </dialog>
     </div>
@@ -29,6 +39,8 @@ export default {
       tasks: [],
       rooms: [],
       userID: "",
+      groupID: [],
+      userFilter: [],
       currentTask: {},
       newTaskParams: {},
       axiosRequests: [],
@@ -37,8 +49,17 @@ export default {
   created() {
     this.tasksIndex();
     this.roomsIndex();
+    this.usersGroupIndex();
   },
   methods: {
+    usersGroupIndex: function () {
+      axios
+        .get("/groups/" + localStorage.group_id + ".json")
+        .then((response) => {
+          (this.groupID = response.data),
+            console.log("Group Index Retrieved", response.data);
+        });
+    },
     tasksIndex: function () {
       axios.get("/tasks.json").then((response) => {
         (this.tasks = response.data),
@@ -68,10 +89,10 @@ export default {
       document.querySelector("#add-task-to-rooms").showModal();
     },
 
-    createTaskForCurrentRoom(i) {
+    createTaskForCurrentRoom(i, j) {
       console.log("Initiating Create task");
       this.newTaskParams.room_id = i;
-      this.newTaskParams.user_id = this.userID;
+      this.newTaskParams.user_id = j.id;
       this.newTaskParams.title = this.currentTask.title;
       this.newTaskParams.description = this.currentTask.description;
       this.newTaskParams.status = this.currentTask.status;
@@ -88,14 +109,24 @@ export default {
     },
 
     addTaskToSelectedRooms(task) {
-      this.currentTask = task;
-      console.log("Current Task:", this.currentTask);
-      this.axiosRequests.forEach((i) => {
-        this.createTaskForCurrentRoom(i);
-      });
-      console.log("Selected rooms added", this.axiosRequests);
-      this.axiosRequests = [];
-      console.log("Empty axiosRequests", this.axiosRequests);
+      // this.currentTask = task;
+      // this.axiosRequests.forEach((i) => {
+      //   this.createTaskForCurrentRoom(i);
+      // });
+      // this.axiosRequests = [];
+
+      // Tests
+      console.log(
+        "Chosen user?",
+        this.groupID.find((j) => {
+          if (j.name == this.userFilter) return j;
+        })
+      );
+      console.log("Group?", this.groupID);
+      console.log("Current Task:", this.currentTask, task);
+      // console.log("Selected rooms added", this.axiosRequests);
+      // console.log("Empty axiosRequests", this.axiosRequests);
+      // Tests
     },
   },
 };
